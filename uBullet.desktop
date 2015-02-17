@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=uBullet
+Comment=Pushbullet client for Ubuntu
+Exec=run.sh $@
+Icon=uBullet.png
+Terminal=false
+Type=Application
+Categories=Network;
+Keywords=Pushbullet;Push;
+X-Ubuntu-Touch=true
+X-Ubuntu-Single-Instance=true
+X-Ubuntu-Splash-Show-Header=true

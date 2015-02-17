@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<application>
+  <services>
+    <service id="xyz.trevisan.marco.ubullet_pushbullet">
+      <description>Push your data to other devices</description>
+    </service>
+  </services>
+</application>

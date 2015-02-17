@@ -1,0 +1,22 @@
+{
+  "architecture": "all",
+  "description": "Pushbullet client for Ubuntu",
+  "framework": "ubuntu-sdk-14.10",
+  "hooks": {
+    "uBullet": {
+      "apparmor": "uBullet.apparmor",
+      "desktop": "uBullet.desktop",
+      "account-application": "uBullet.application",
+      "account-service": "uBullet.service",
+      "urls": "uBullet.url-dispatcher"
+    },
+    "pushbullet-account": {
+      "account-qml-plugin": "pushbullet-account",
+      "account-provider": "pushbullet.provider"
+    }
+  },
+  "maintainer": "Marco Trevisan <marco@trevisan.xyz>",
+  "name": "xyz.trevisan.marco.ubullet",
+  "title": "uBullet",
+  "version": "0.1"
+}

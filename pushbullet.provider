@@ -1,0 +1,25 @@
+<provider id="pushbullet">
+  <name>Pushbullet</name>
+  <icon>pushbullet.png</icon>
+  <plugin>generic-oauth</plugin>
+  <domains>.*pushbullet\.com</domains>
+  <single-account>true</single-account>
+
+  <template>
+    <group name="auth">
+      <setting name="method">oauth2</setting>
+      <setting name="mechanism">user_agent</setting>
+      <group name="oauth2">
+        <group name="user_agent">
+          <setting name="Host">www.pushbullet.com</setting>
+          <setting name="AuthPath">authorize</setting>
+          <setting name="RedirectUri">https://www.pushbullet.com/login-success</setting>
+          <setting name="ClientId">yDROeQNtBcUY22gFBmrhnrofhsxubV0M</setting>
+          <setting name="ResponseType">token</setting>
+          <setting type="as" name="Scope">['everything']</setting>
+          <setting type="as" name="AllowedSchemes">['https']</setting>
+        </group>
+      </group>
+    </group>
+  </template>
+</provider>
