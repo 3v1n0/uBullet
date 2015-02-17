@@ -6,11 +6,14 @@ WebView {
     id: root
 
     property QtObject signonRequest
-    preferences.localStorageEnabled: true
+    property variant webViewPreferences
 
     Component.onCompleted: {
         signonRequest.authenticated.connect(onAuthenticated)
         url = signonRequest.startUrl
+
+        for (var name in webViewPreferences)
+            preferences[name] = webViewPreferences[name];
     }
 
     onLoadingChanged: {

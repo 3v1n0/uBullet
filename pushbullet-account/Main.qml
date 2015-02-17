@@ -1,6 +1,9 @@
 import Ubuntu.OnlineAccounts.Plugin 1.0
+import "." as Local
 
 OAuthMain
 {
-  creationComponentUrl: "OAuth.qml"
+  creationComponent: Local.OAuth {
+    webViewPreferences: {"localStorageEnabled": true}
+  }
 }

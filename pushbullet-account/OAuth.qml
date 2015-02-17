@@ -31,6 +31,7 @@ Item {
     property variant accessControlList: ["unconfined"]
 
     property variant authReply
+    property variant webViewPreferences
     property bool isNewAccount: false
     property variant __account: account
     property bool __isAuthenticating: false
@@ -55,7 +56,8 @@ Item {
             if (request) {
                 console.log("RequestHandler captured request!")
                 loader.setSource("WebView.qml", {
-                    "signonRequest": request
+                    "signonRequest": request,
+                    "webViewPreferences": webViewPreferences
                 })
             } else {
                 console.log("Request destroyed!")
