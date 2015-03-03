@@ -90,15 +90,9 @@ MainView
       if (!enabled)
       {
         token = ""
-        main_page.setupAccount();
+        setupAccount();
       }
     }
-  }
-
-  Page
-  {
-    id: main_page
-    title: i18n.tr("uBullet")
 
     Component.onCompleted: setupAccount()
 
@@ -126,5 +120,11 @@ MainView
         });
       }
     }
+  }
+
+  Page
+  {
+    id: main_page
+    title: i18n.tr("uBullet")
   }
 }
