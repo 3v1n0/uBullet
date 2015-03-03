@@ -8,7 +8,7 @@ import Ubuntu.OnlineAccounts.Client 0.1
 Dialog
 {
   id: dialog
-  signal authorized(string token)
+  signal authorized(string id)
 
   title: i18n.tr("No Account configured")
   text: i18n.tr("Authorize or select the PushBullet account you want to use")
@@ -37,6 +37,7 @@ Dialog
   {
     Button
     {
+      id: select_button
       text: i18n.tr("Select")
       visible: accounts.visible
       Layout.minimumWidth: parent.width/2
@@ -49,8 +50,8 @@ Dialog
       AccountService
       {
         id: account_service
-        onAuthenticated: dialog.authorized(reply.AccessToken)
-        onAuthenticationError: {error_label.visible = true; error_label.error = error.code }
+        onAuthenticated: dialog.authorized(accountId)
+        onAuthenticationError: {error_label.visible = true; error_label.error = error.message }
       }
     }
 
@@ -59,8 +60,18 @@ Dialog
       Layout.alignment: Qt.AlignHCenter
       Layout.minimumWidth: parent.width/2
       text: i18n.tr(accounts.visible ? "Add More" : "Add account")
-      onClicked: account_setup.exec();
       color: accounts.visible ? UbuntuColors.warmGrey : UbuntuColors.orange
+      onClicked: {
+        if (accounts.model.count == 0)
+        {
+          accounts.model.countChanged.connect(function() {
+            if (accounts.model.count == 1)
+              select_button.clicked()
+          });
+        }
+
+        account_setup.exec();
+      }
 
       Setup
       {
