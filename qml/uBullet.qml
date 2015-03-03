@@ -78,7 +78,10 @@ MainView
   {
     id: account_service
 
-    onAuthenticationError: settings.set("account_id", 0)
+    onAuthenticationError: {
+      console.error("Impossible to auth with accout "+displayName+": "+error.message)
+      settings.set("account_id", 0)
+    }
     onAuthenticated: {
       settings.set("account_id", accountId)
       token = reply.AccessToken;
@@ -113,6 +116,7 @@ MainView
         var dialog = Qt.createComponent("AccountsDialog.qml").createObject(main);
         dialog.onVisibleChanged.connect(dialog.__closeIfHidden);
         main.Component.onDestruction.connect(dialog.__closePopup);
+        dialog.account_model = services_model;
         dialog.show();
 
         dialog.authorized.connect(function(id) {
