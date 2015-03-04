@@ -3,7 +3,7 @@
   "description": "Pushbullet client for Ubuntu",
   "framework": "ubuntu-sdk-14.10",
   "hooks": {
-    "ubullet": {
+    "pushbullet": {
       "apparmor": "uBullet.apparmor",
       "desktop": "uBullet.desktop",
       "account-application": "uBullet.application",

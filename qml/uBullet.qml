@@ -11,7 +11,7 @@ MainView
 {
   id: main
   applicationName: "xyz.trevisan.marco.ubullet"
-  readonly property string appId: applicationName + "_ubullet"
+  readonly property string appId: applicationName + "_pushbullet"
 
   property string token
   property string deviceIden
@@ -129,7 +129,7 @@ MainView
   PushClient
   {
     id: push_client
-    appId: main.applicationName + "_pushbullet"
+    appId: main.appId
 
     onTokenChanged: {
       setupPushNotifications()

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<service id="xyz.trevisan.marco.ubullet_ubullet">
+<service id="xyz.trevisan.marco.ubullet_pushbullet">
   <type>sharing</type>
   <name>uBullet</name>
   <icon>uBullet</icon>

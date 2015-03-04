@@ -3,7 +3,7 @@
   <description>uBullet</description>
 
   <services>
-    <service id="xyz.trevisan.marco.ubullet_ubullet">
+    <service id="xyz.trevisan.marco.ubullet_pushbullet">
       <description>Push your data to other devices</description>
     </service>
   </services>
