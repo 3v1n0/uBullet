@@ -184,7 +184,16 @@ Pushbullet.prototype = {
 
     xhr.onreadystatechange = function() {
       if (xhr.readyState === XMLHttpRequest.DONE && cb)
-        cb(xhr.status, JSON.parse(xhr.responseText))
+      {
+        var reply = xhr.responseText ? JSON.parse(xhr.responseText) : null
+        if (xhr.status != 200)
+        {
+          var error_string = (reply && "error" in reply) ? reply.error.type+": "+reply.error.message : ""
+          console.error("Got error "+xhr.status+(error_string.length ? "; "+error_string : ""));
+        }
+
+        cb(xhr.status, reply)
+      }
     };
     xhr.send(parameters ? JSON.stringify(parameters) : null)
   },
