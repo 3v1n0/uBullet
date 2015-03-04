@@ -1,3 +1,5 @@
+.pragma library
+
 var MACHINE_ID_FILE = "/etc/machine-id"
 var MACHINE_BUILD_PROPS = "/system/build.prop"
 var PB_API_PATH = "https://api.pushbullet.com/v2/"
@@ -16,8 +18,8 @@ Pushbullet.prototype = {
     pb.push_token = "ubuntu:" + push_token
     pb.device_iden = device_iden;
 
-    pb.__getMachineId(function() {
-      pb.getDevices(function(devices) {
+    pb.getDevices(function(devices) {
+      pb.__getMachineId(function() {
         var device = null
         for (var d in devices)
         {
@@ -43,7 +45,7 @@ Pushbullet.prototype = {
     });
   },
 
-  createOrUpdateDevice: function(cb)
+  createDevice: function(cb)
   {
     var pb = this
     pb.deviceData(function(device_data) {
@@ -94,28 +96,22 @@ Pushbullet.prototype = {
     var device_data = {"push_token": this.push_token, "type": "ubuntu", "kind": "ubuntu" };
 
     pb.__getMachineId(function() {
-      device_data["fingerprint"] = pb.machine_id
+      device_data.fingerprint = pb.machine_id
 
       pb.__getDeviceProperties(function(dev_props) {
-        device_data["nickname"] = "Ubuntu Phone"
+        device_data.nickname = "Ubuntu Phone"
 
         if ("ro.product.brand" in dev_props)
-          device_data["manufacturer"] = dev_props["ro.product.brand"]
+          device_data.manufacturer = dev_props["ro.product.brand"]
 
         if ("ro.product.model" in dev_props)
-          device_data["model"] = dev_props["ro.product.model"]
+          device_data.model = dev_props["ro.product.model"]
+
+        if ("model" in device_data)
+          device_data.nickname = device_data["model"]
 
         if ("manufacturer" in device_data)
-        {
-          device_data["nickname"] = device_data["manufacturer"]
-
-          if ("model" in device_data)
-            device_data["nickname"] += " " + device_data["model"]
-        }
-        else if ("model" in device_data)
-        {
-          device_data["nickname"] == device_data["model"]
-        }
+          device_data.nickname = device_data.manufacturer + " " + device_data.nickname
 
         if (cb) cb(device_data)
       })
@@ -132,7 +128,8 @@ Pushbullet.prototype = {
 
     var pb = this
     pb.__getLocalFile(MACHINE_ID_FILE, function(response) {
-      pb.machine_id = response.trim()
+      if (typeof(response) === 'string')
+        pb.machine_id = response.trim()
       if (cb) cb(pb.machine_id)
     })
   },
@@ -141,7 +138,8 @@ Pushbullet.prototype = {
   {
     this.__getLocalFile(MACHINE_BUILD_PROPS, function(response) {
       var props = {}
-      var lines = response.split("\n")
+      var lines = (typeof(response) === 'string') ? response.split("\n") : []
+
       for (var i in lines)
       {
         var trimmed = lines[i].trim()
@@ -149,7 +147,8 @@ Pushbullet.prototype = {
           continue;
 
         var parameter = trimmed.split("=")
-        props[parameter[0]] = parameter[1]
+        if (parameter.length == 2)
+          props[parameter[0]] = parameter[1]
       }
 
       if (cb) cb(props)
