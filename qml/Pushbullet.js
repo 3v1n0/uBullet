@@ -6,41 +6,43 @@ var PB_API_PATH = "https://api.pushbullet.com/v2/"
 
 function Pushbullet(access_token) {
   this.access_token = access_token
+  this.push_token = null
+  this.device = null
   this.device_iden = null;
   this.machine_id = null
   this.devices = null
 }
 
 Pushbullet.prototype = {
+  setPushToken: function(push_token, cb)
+  {
+    this.push_token = (push_token && push_token.length) ? "ubuntu:" + push_token : null
+
+    if (this.device && this.device.push_token !== this.push_token)
+      this.updateDevice(cb)
+  },
+
   ensureDevice: function(push_token, device_iden, cb)
   {
     var pb = this
-    pb.push_token = "ubuntu:" + push_token
-    pb.device_iden = device_iden;
+    console.log("ENSURE DEVBICE",push_token,device_iden)
+    pb.device = null
+    pb.setPushToken(push_token)
 
     pb.getDevices(function(devices) {
       pb.__getMachineId(function() {
-        var device = null
         for (var d in devices)
         {
           if (devices[d].active &&
               (devices[d].fingerprint === pb.machine_id ||
-               devices[d].iden == pb.device_iden))
+               devices[d].iden === device_iden))
           {
-            device = devices[d]
-            pb.device_iden = device.iden;
+            pb.device = devices[d]
             break;
           }
         }
 
-        if (!device)
-        {
-          pb.createDevice(cb)
-        }
-        else
-        {
-          pb.updateDevice(cb)
-        }
+        pb.device ? pb.updateDevice(cb) : pb.createDevice(cb);
       })
     });
   },
@@ -50,7 +52,7 @@ Pushbullet.prototype = {
     var pb = this
     pb.deviceData(function(device_data) {
       pb.__doPostRequest("devices", device_data, function(status, reply) {
-        pb.device_iden = reply.iden
+        pb.device = (reply && "iden" in reply) ? reply : null
         if (cb) cb(reply)
       })
     })
@@ -58,7 +60,7 @@ Pushbullet.prototype = {
 
   updateDevice: function(cb)
   {
-    if (!this.device_iden)
+    if (!this.device || !this.device.iden)
     {
       console.error("Impossible to update a device with no iden")
       if (cb) cb()
@@ -67,8 +69,9 @@ Pushbullet.prototype = {
 
     var pb = this
     pb.deviceData(function(device_data) {
-      pb.__doPostRequest("devices/"+pb.device_iden, device_data, function(status, reply) {
-        if (cb) cb(reply)
+      pb.__doPostRequest("devices/"+pb.device.iden, device_data, function(status, reply) {
+        pb.device = (reply && "iden" in reply) ? reply : null
+        if (cb) cb(pb.device)
       })
     })
   },
@@ -93,7 +96,10 @@ Pushbullet.prototype = {
   deviceData: function(cb)
   {
     var pb = this;
-    var device_data = {"push_token": this.push_token, "type": "ubuntu", "kind": "ubuntu" };
+    var device_data = {"type": "ubuntu", "kind": "ubuntu" };
+
+    if (this.push_token)
+      device_data.push_token = this.push_token
 
     pb.__getMachineId(function() {
       device_data.fingerprint = pb.machine_id
