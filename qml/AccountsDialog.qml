@@ -8,7 +8,6 @@ import Ubuntu.OnlineAccounts.Client 0.1
 Dialog
 {
   id: dialog
-  property var account_model
   signal authorized(string id)
 
   title: i18n.tr("No Account configured")
@@ -19,7 +18,7 @@ Dialog
     id: accounts
     expanded: true
     visible: model.count > 0
-    model: account_model
+    model: AccountServiceModel { applicationId: main.appId }
     delegate: OptionSelectorDelegate { text: displayName; }
     onSelectedIndexChanged: error_label.error = undefined
   }

@@ -115,7 +115,6 @@ MainView
         var dialog = Qt.createComponent("AccountsDialog.qml").createObject(main);
         dialog.onVisibleChanged.connect(dialog.__closeIfHidden);
         main.Component.onDestruction.connect(dialog.__closePopup);
-        dialog.account_model = services_model;
         dialog.show();
 
         dialog.authorized.connect(function(id) {
