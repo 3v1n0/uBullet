@@ -3,7 +3,7 @@
   "description": "Pushbullet client for Ubuntu",
   "framework": "ubuntu-sdk-14.10",
   "hooks": {
-    "uBullet": {
+    "ubullet": {
       "apparmor": "uBullet.apparmor",
       "desktop": "uBullet.desktop",
       "account-application": "uBullet.application",
@@ -22,5 +22,5 @@
   "maintainer": "Marco Trevisan <marco@trevisan.xyz>",
   "name": "xyz.trevisan.marco.ubullet",
   "title": "uBullet",
-  "version": "0.1"
+  "version": "0.2"
 }

@@ -1,9 +1,9 @@
-<provider id="pushbullet">
+<provider id="xyz.trevisan.marco.ubullet_pushbullet-account">
   <name>Pushbullet</name>
   <icon>pushbullet.png</icon>
   <plugin>generic-oauth</plugin>
   <domains>.*pushbullet\.com</domains>
-  <single-account>true</single-account>
+  <translations>account-plugins</translations>
 
   <template>
     <group name="auth">

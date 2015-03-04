@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<service>
+<service id="xyz.trevisan.marco.ubullet_ubullet">
   <type>sharing</type>
   <name>uBullet</name>
   <icon>uBullet</icon>
-  <provider>pushbullet</provider>
+  <provider>xyz.trevisan.marco.ubullet_pushbullet-account</provider>
   <translations>account-plugins</translations>
 </service>
