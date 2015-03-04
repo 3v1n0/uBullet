@@ -10,6 +10,10 @@
       "account-service": "uBullet.service",
       "urls": "uBullet.url-dispatcher"
     },
+    "ubullet-push" : {
+      "apparmor": "uBullet-push.apparmor",
+      "push-helper": "uBullet.push"
+    },
     "pushbullet-account": {
       "account-qml-plugin": "pushbullet-account",
       "account-provider": "pushbullet.provider"

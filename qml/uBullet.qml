@@ -3,14 +3,19 @@ import QtQuick.Layouts 1.1
 import Ubuntu.Components 1.1
 import Ubuntu.OnlineAccounts 0.1
 import Ubuntu.OnlineAccounts.Client 0.1
+import Ubuntu.PushNotifications 0.1
 import U1db 1.0 as U1db
+import "Pushbullet.js" as PB
 
 MainView
 {
   id: main
   applicationName: "xyz.trevisan.marco.ubullet"
   readonly property string appId: applicationName + "_ubullet"
+
   property string token
+  property string deviceIden
+  property var pb: null
 
   width: units.gu(40)
   height: units.gu(71)
@@ -39,7 +44,7 @@ MainView
     database: db
     docId: "settings"
     create: true
-    defaults: {"account_id": 0}
+    defaults: {"account_id": 0, "device_iden": ""}
 
     function get(key) { return contents[key] }
     function set(key, val) { var cnt = contents; cnt[key] = val; contents = cnt; }
@@ -122,9 +127,56 @@ MainView
     }
   }
 
+  PushClient
+  {
+    id: push_client
+    appId: main.applicationName + "_pushbullet"
+
+    onTokenChanged: {
+      setupPushNotifications()
+    }
+    onError: console.error("PushClient Error:", error)
+  }
+
+  onTokenChanged: {
+    console.log("PB Token set to",token)
+    pb = token.length ? new PB.Pushbullet(token) : null
+    setupDevice()
+  }
+
+  onDeviceIdenChanged: {
+    settings.set("device_iden", deviceIden)
+    setupPushNotifications()
+  }
+
+  function setupDevice()
+  {
+    if (!pb)
+      return
+
+    pb.ensureDevice(push_client.token, settings.get("device_iden"), function(reply) {
+      if (!pb.device)
+        return;
+
+      deviceIden = pb.device.iden
+    });
+  }
+
+  function setupPushNotifications()
+  {
+    if (pb && deviceIden.length)
+      pb.setPushToken(push_client.token)
+  }
+
   Page
   {
     id: main_page
     title: i18n.tr("uBullet")
+
+    ActivityIndicator
+    {
+      running: true
+      anchors.centerIn: parent
+    }
   }
 }
