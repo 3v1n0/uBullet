@@ -1,6 +1,7 @@
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
 import Ubuntu.Components 1.1
+import Ubuntu.Components.ListItems 0.1 as ListItem
 import Ubuntu.OnlineAccounts 0.1
 import Ubuntu.OnlineAccounts.Client 0.1
 import Ubuntu.PushNotifications 0.1
@@ -10,16 +11,18 @@ import "Pushbullet.js" as PB
 MainView
 {
   id: main
-  applicationName: "xyz.trevisan.marco.ubullet"
   readonly property string appId: applicationName + "_pushbullet"
 
   property string token
   property string deviceIden
   property var pb: null
 
+  applicationName: "xyz.trevisan.marco.ubullet"
+  automaticOrientation: true
+  useDeprecatedToolbar: false
+
   width: units.gu(40)
   height: units.gu(71)
-  useDeprecatedToolbar: false
 
   Connections
   {
@@ -146,6 +149,9 @@ MainView
   onDeviceIdenChanged: {
     settings.set("device_iden", deviceIden)
     setupPushNotifications()
+    pb.getPushes(0, function(status, reply) {
+      push_model.jsonObject = (status == 200) ? reply.pushes : null
+    })
   }
 
   function setupDevice()
@@ -172,9 +178,20 @@ MainView
     id: main_page
     title: i18n.tr("uBullet")
 
+    ListView
+    {
+      anchors.fill: parent
+      model: JSONListModel {id: push_model}
+
+      delegate: ListItem.Standard {
+        text: iden
+      }
+    }
+
     ActivityIndicator
     {
       running: true
+      visible: !deviceIden.length && !push_model.count
       anchors.centerIn: parent
     }
   }
