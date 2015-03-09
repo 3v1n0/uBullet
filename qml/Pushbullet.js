@@ -124,6 +124,13 @@ Pushbullet.prototype = {
     })
   },
 
+  getPushes: function(params, cb)
+  {
+    var since = params && typeof(params.since) == 'number' ? params.since : 0
+    var active = params && params.active !== true ? "false" : "true"
+    this.__doGetRequest("pushes?modified_after=%1&active=%2".arg(since).arg(active), cb);
+  },
+
   __getMachineId: function(cb)
   {
     if (this.machine_id)
