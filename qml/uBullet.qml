@@ -1,12 +1,13 @@
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
 import Ubuntu.Components 1.1
-import Ubuntu.Components.ListItems 0.1 as ListItem
+import Ubuntu.Connectivity 1.0
 import Ubuntu.OnlineAccounts 0.1
 import Ubuntu.OnlineAccounts.Client 0.1
 import Ubuntu.PushNotifications 0.1
 import U1db 1.0 as U1db
 import "Pushbullet.js" as PB
+import "3rd-party"
 
 MainView
 {
@@ -181,10 +182,21 @@ MainView
     ListView
     {
       anchors.fill: parent
-      model: JSONListModel {id: push_model}
+      model: JSONListModel { id: push_model }
 
-      delegate: ListItem.Standard {
-        text: iden
+      delegate: ListItemWithActions {
+        width: parent.width
+        height: bubble.height + units.gu(2)
+
+        PushBubble
+        {
+          id: bubble
+          what: type
+          title: model.title ? model.title : (file_name ? file_name : "")
+          body: model.body ? model.body : ""
+          when: model.created
+          img_src: image_url ? image_url : ""
+        }
       }
     }
 
