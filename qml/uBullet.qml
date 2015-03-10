@@ -202,6 +202,19 @@ MainView
           }
         }
 
+        rightSideActions: [
+          Action
+          {
+            iconName: "save"
+            text: i18n.tr("Download")
+            visible: file_url ? true : false
+            onTriggered: {
+              // TODO implement proper download
+              Qt.openUrlExternally(file_url)
+            }
+          }
+        ]
+
         PushBubble
         {
           id: bubble
