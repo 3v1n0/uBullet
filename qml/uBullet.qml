@@ -273,14 +273,14 @@ MainView
         PushBubble
         {
           id: bubble
-          who: (sender_iden === pb.me.iden) ? i18n.tr("You") : (sender_name ? sender_name : sender_email)
-          to: (sender_iden === pb.me.iden) ? i18n.tr("yourself") : i18n.tr("you")
+          who: (sender_iden === pb.me.iden) ? i18n.tr("You") : (model.sender_name ? sender_name : sender_email)
+          to: (sender_iden === pb.me.iden) ? (model.to ? (model.to.name ? model.to.name : model.to.email) : i18n.tr("yourself")) : i18n.tr("you")
           what: type
           title: model.title ? model.title : (file_name ? file_name : "")
           body: model.body ? model.body : ""
           when: created
-          img_src: image_url ? image_url : ""
-          link: url ? url : ""
+          img_src: model.image_url ? image_url : ""
+          link: model.url ? url : ""
         }
       }
 
