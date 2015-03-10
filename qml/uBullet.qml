@@ -14,7 +14,7 @@ MainView
   id: main
   readonly property string appId: applicationName + "_pushbullet"
 
-  property string token
+  property string accountToken
   property string deviceIden
   property var pb: null
 
@@ -32,6 +32,18 @@ MainView
     Component.onCompleted: {
       Qt.application.organization = "uBullet"
       Qt.application.domain = "3v1n0.net"
+    }
+  }
+
+  Connections
+  {
+    target: NetworkingStatus
+
+    onOnlineChanged: {
+      if (NetworkingStatus.online)
+        setUpPB()
+      else
+        push_client.enabled = false
     }
   }
 
@@ -64,9 +76,7 @@ MainView
       for (var i = 0; i < count; ++i)
       {
         if (get(i, "accountId") == id)
-        {
           return get(i, "accountServiceHandle");
-        }
       }
 
       return null;
@@ -93,12 +103,12 @@ MainView
     }
     onAuthenticated: {
       settings.set("account_id", accountId)
-      token = reply.AccessToken;
+      accountToken = reply.AccessToken;
     }
     onEnabledChanged: {
       if (!enabled)
       {
-        token = ""
+        accountToken = ""
         setupAccount();
       }
     }
@@ -130,20 +140,35 @@ MainView
     }
   }
 
-  PushClient
+  Loader
   {
     id: push_client
-    appId: main.appId
+    property bool enabled: false
+    property string token
 
-    onTokenChanged: {
-      setupPushNotifications()
+    onEnabledChanged: sourceComponent = enabled ? push_client_component : null
+
+    Component
+    {
+      id: push_client_component
+
+      PushClient
+      {
+        appId: main.appId
+
+        onTokenChanged: {
+          push_client.token = token;
+          setupPushNotifications()
+        }
+
+        onError: console.error("PushClient Error:", status)
+        Component.onDestruction: push_client.token = ""
+      }
     }
-    onError: console.error("PushClient Error:", error)
   }
 
-  onTokenChanged: {
-    pb = token.length ? new PB.Pushbullet(token) : null
-    setupDevice()
+  onAccountTokenChanged: {
+    setUpPB()
   }
 
   onDeviceIdenChanged: {
@@ -155,6 +180,16 @@ MainView
   SharePopup
   {
     id: share_popup
+  }
+
+  function setUpPB()
+  {
+    if (NetworkingStatus.online)
+    {
+      pb = accountToken.length ? new PB.Pushbullet(accountToken) : null
+      push_client.enabled = true
+      setupDevice()
+    }
   }
 
   function setupDevice()
