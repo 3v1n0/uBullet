@@ -233,7 +233,7 @@ MainView
         {
           id: bubble
           who: (sender_iden === pb.me.iden) ? i18n.tr("You") : (sender_name ? sender_name : sender_email)
-          to: (receiver_iden === pb.me.iden) ? i18n.tr("yourself") : (receiver_name ? receiver_name : receiver_email)
+          to: (sender_iden === pb.me.iden) ? i18n.tr("yourself") : i18n.tr("you")
           what: type
           title: model.title ? model.title : (file_name ? file_name : "")
           body: model.body ? model.body : ""
