@@ -155,6 +155,11 @@ MainView
     })
   }
 
+  SharePopup
+  {
+    id: share_popup
+  }
+
   function setupDevice()
   {
     if (!pb)
