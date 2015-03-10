@@ -188,13 +188,27 @@ MainView
         width: parent.width
         height: bubble.height + units.gu(2)
 
+        leftSideAction: Action {
+          iconName: "delete"
+          text: i18n.tr("Remove")
+          onTriggered: {
+            bubble.opacity = 0.4
+            pb.deletePush(iden, function(status) {
+              if (status == 200)
+                push_model.remove(index)
+
+              bubble.opacity = 1.0
+            })
+          }
+        }
+
         PushBubble
         {
           id: bubble
           what: type
           title: model.title ? model.title : (file_name ? file_name : "")
           body: model.body ? model.body : ""
-          when: model.created
+          when: created
           img_src: image_url ? image_url : ""
         }
       }

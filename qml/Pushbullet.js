@@ -131,6 +131,11 @@ Pushbullet.prototype = {
     this.__doGetRequest("pushes?modified_after=%1&active=%2".arg(since).arg(active), cb);
   },
 
+  deletePush: function(iden, cb)
+  {
+    this.__doDeleteRequest("pushes/"+iden, cb);
+  },
+
   __getMachineId: function(cb)
   {
     if (this.machine_id)
