@@ -28,6 +28,20 @@ UbuntuShape
     source: bubble.img_src ? (bubble.img_src + "?w=%1&h=%2&fit=crop".arg(width).arg(height)) : ""
   }
 
+  function translatedWhat()
+  {
+    if (what == "note")
+      return i18n.tr("note")
+    else if (what == "link")
+      return i18n.tr("link")
+    else if (what == "file")
+      return i18n.tr("file")
+    else if (what == "list")
+      return i18n.tr("list")
+
+    return what
+  }
+
   Rectangle
   {
     visible: bg_image.ready
@@ -54,7 +68,7 @@ UbuntuShape
 
       Label
       {
-        text: "%1 sent yourself a %2".arg(bubble.sender).arg(bubble.what)
+        text: i18n.tr("%1 sent yourself a %2".arg(bubble.sender).arg(bubble.translatedWhat()))
         fontSize: "x-small"
         font.weight: Font.Bold
         color: "#aaa"
