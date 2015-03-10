@@ -142,7 +142,6 @@ MainView
   }
 
   onTokenChanged: {
-    console.log("PB Token set to",token)
     pb = token.length ? new PB.Pushbullet(token) : null
     setupDevice()
   }
@@ -184,9 +183,7 @@ MainView
 
     push_model.updating = true;
     pb.getPushes({}, function(status, reply) {
-      console.log("Pushes, status",status,reply)
       push_model.jsonObject = (status == 200) ? reply.pushes : null
-      console.log(Debug.serialize(reply.pushes))
       push_model.updating = false
     })
   }
