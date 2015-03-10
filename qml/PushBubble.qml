@@ -6,7 +6,8 @@ UbuntuShape
 {
   id: bubble
   property bool aboutToRemove: false
-  property string sender: "You"
+  property string who: i18n.tr("You")
+  property string to: i18n.tr("yourself")
   property string what
   property string title
   property string body
@@ -69,7 +70,7 @@ UbuntuShape
 
       Label
       {
-        text: i18n.tr("%1 sent yourself a %2".arg(bubble.sender).arg(bubble.translatedWhat()))
+        text: i18n.tr("%1 sent %2 a %3".arg(bubble.who).arg(bubble.to).arg(bubble.translatedWhat()))
         fontSize: "x-small"
         font.weight: Font.Bold
         color: "#aaa"
