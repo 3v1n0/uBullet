@@ -42,8 +42,6 @@ MainView
     onOnlineChanged: {
       if (NetworkingStatus.online)
         setUpPB()
-      else
-        push_client.enabled = false
     }
   }
 
@@ -143,7 +141,7 @@ MainView
   Loader
   {
     id: push_client
-    property bool enabled: false
+    property bool enabled: NetworkingStatus.online
     property string token
 
     onEnabledChanged: sourceComponent = enabled ? push_client_component : null
@@ -187,7 +185,6 @@ MainView
     if (NetworkingStatus.online)
     {
       pb = accountToken.length ? new PB.Pushbullet(accountToken) : null
-      push_client.enabled = true
       setupDevice()
     }
   }
