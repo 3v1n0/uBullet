@@ -15,7 +15,7 @@ UbuntuShape
   readonly property double content_spacing: units.gu(0.9)
 
   width: parent.width
-  height: childrenRect.height + content_spacing
+  height: content_layout.height + content_spacing * 2
   color: "white"
   opacity: aboutToRemove ? 0.4 : 1.0
 
