@@ -192,12 +192,12 @@ MainView
           iconName: "delete"
           text: i18n.tr("Remove")
           onTriggered: {
-            bubble.opacity = 0.4
+            bubble.aboutToRemove = true
             pb.deletePush(iden, function(status) {
               if (status == 200)
                 push_model.remove(index)
 
-              bubble.opacity = 1.0
+              bubble.aboutToRemove = false
             })
           }
         }

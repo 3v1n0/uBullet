@@ -5,8 +5,9 @@ import Ubuntu.Components 1.1
 UbuntuShape
 {
   id: bubble
+  property bool aboutToRemove: false
   property string sender: "You"
-  property string what: "note"
+  property string what
   property string title
   property string body
   property string img_src
@@ -16,6 +17,7 @@ UbuntuShape
   width: parent.width
   height: childrenRect.height + content_spacing
   color: "white"
+  opacity: aboutToRemove ? 0.4 : 1.0
 
   image: Image
   {
@@ -95,5 +97,12 @@ UbuntuShape
         color: bg_image.ready ? "white" : "black"
       }
     }
+  }
+
+  ActivityIndicator
+  {
+    anchors.centerIn: parent
+    running: bubble.aboutToRemove
+    visible: running
   }
 }
