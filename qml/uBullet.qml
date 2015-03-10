@@ -207,10 +207,19 @@ MainView
           {
             iconName: "save"
             text: i18n.tr("Download")
-            visible: file_url ? true : false
+            visible: type && type == "file" && file_url
             onTriggered: {
               // TODO implement proper download
               Qt.openUrlExternally(file_url)
+            }
+          },
+          Action
+          {
+            iconName: "share"
+            text: i18n.tr("Share")
+            visible: typeof(url) != "undefined" || typeof(file_url) != "undefined"
+            onTriggered: {
+              share_popup.shareLink(url || file_url, title)
             }
           }
         ]
