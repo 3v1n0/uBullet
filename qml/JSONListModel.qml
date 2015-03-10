@@ -3,6 +3,7 @@ import "jsonpath.js" as JSONPath
 
 ListModel
 {
+  property bool updating: false
   property var jsonObject: null
   property string query
 

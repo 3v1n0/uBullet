@@ -150,9 +150,7 @@ MainView
   onDeviceIdenChanged: {
     settings.set("device_iden", deviceIden)
     setupPushNotifications()
-    pb.getPushes(0, function(status, reply) {
-      push_model.jsonObject = (status == 200) ? reply.pushes : null
-    })
+    updatePushModel()
   }
 
   SharePopup
@@ -177,6 +175,20 @@ MainView
   {
     if (pb && deviceIden.length)
       pb.setPushToken(push_client.token)
+  }
+
+  function updatePushModel()
+  {
+    if (push_model.updating)
+      return;
+
+    push_model.updating = true;
+    pb.getPushes({}, function(status, reply) {
+      console.log("Pushes, status",status,reply)
+      push_model.jsonObject = (status == 200) ? reply.pushes : null
+      console.log(Debug.serialize(reply.pushes))
+      push_model.updating = false
+    })
   }
 
   Page
@@ -241,6 +253,12 @@ MainView
           img_src: image_url ? image_url : ""
           link: url ? url : ""
         }
+      }
+
+      PullToRefresh
+      {
+        refreshing: push_model.updating
+        onRefresh: updatePushModel()
       }
     }
 
