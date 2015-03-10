@@ -8,12 +8,24 @@ function Pushbullet(access_token) {
   this.access_token = access_token
   this.push_token = null
   this.device = null
-  this.device_iden = null;
+  this.device_iden = null
   this.machine_id = null
   this.devices = null
+  this.me = null
+  this.updateMe()
 }
 
 Pushbullet.prototype = {
+  updateMe: function(cb)
+  {
+    var pb = this
+    this.__doGetRequest("users/me", function(status, reply) {
+      if (status == 200)
+        pb.me = reply
+      if (cb) cb()
+    });
+  },
+
   setPushToken: function(push_token, cb)
   {
     this.push_token = (push_token && push_token.length) ? "ubuntu:" + push_token : null
