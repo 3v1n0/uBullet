@@ -139,8 +139,8 @@ Pushbullet.prototype = {
   getPushes: function(params, cb)
   {
     var since = params && typeof(params.since) == 'number' ? params.since : 0
-    var active = params && params.active !== true ? "false" : "true"
-    this.__doGetRequest("pushes?modified_after=%1&active=%2".arg(since).arg(active), cb);
+    var active = params && (typeof(params.only_active) == 'undefined' || params.only_active)
+    this.__doGetRequest("pushes?modified_after=%1&active=%2".arg(since).arg(active ? "true" : "false"), cb);
   },
 
   deletePush: function(iden, cb)
