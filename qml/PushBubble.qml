@@ -73,6 +73,7 @@ UbuntuShape
         text: i18n.tr("%1 sent %2 a %3".arg(bubble.who).arg(bubble.to).arg(bubble.translatedWhat()))
         fontSize: "x-small"
         font.weight: Font.Bold
+        elide: Text.ElideRight
         color: "#aaa"
         Layout.fillWidth: true
       }
