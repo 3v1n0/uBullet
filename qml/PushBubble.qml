@@ -11,6 +11,7 @@ UbuntuShape
   property string title
   property string body
   property string img_src
+  property string link
   property var when
   readonly property double content_spacing: units.gu(0.9)
 
@@ -109,6 +110,19 @@ UbuntuShape
         elide: Text.ElideRight
         Layout.maximumWidth: content_layout.width
         color: bg_image.ready ? "white" : "black"
+      }
+
+      Label
+      {
+        visible: bubble.link.length > 0
+        text: "<a href=\"%1\">%2</a>".arg(bubble.link).arg(bubble.link)
+        fontSize: "small"
+        wrapMode: Text.Wrap
+        elide: Text.ElideRight
+        maximumLineCount: 1
+        Layout.maximumWidth: content_layout.width
+        linkColor: "#6EC07C"
+        onLinkActivated: Qt.openUrlExternally(link)
       }
     }
   }

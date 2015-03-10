@@ -210,6 +210,7 @@ MainView
           body: model.body ? model.body : ""
           when: created
           img_src: image_url ? image_url : ""
+          link: url ? url : ""
         }
       }
     }
