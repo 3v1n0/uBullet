@@ -299,20 +299,34 @@ MainView
     {
       id: loading_indicator
       anchors.centerIn: parent
-      visible: !push_model.count && (push_model.updating || !deviceIden.length)
+      visible: !push_model.count && (push_model.updating || (!deviceIden.length && NetworkingStatus.online))
       running: visible
     }
 
     EmptyState
     {
+      id: empty_state
       anchors.centerIn: parent
       width: parent.width
       visible: !push_model.count && !loading_indicator.visible
-      iconName: NetworkingStatus.online ? "info" : "sync-offline"
-      title: NetworkingStatus.online ? i18n.tr("No Push notification") :
-                                       i18n.tr("No available connection")
-      subTitle: NetworkingStatus.online ? i18n.tr("Use the bottom edge to send a new Push") :
-                                          i18n.tr("Ensure you've an active connection in order to fetch your pushes")
+      iconName: "info"
+      title: i18n.tr("No Push bullets")
+      subTitle: i18n.tr("Use the bottom edge to send a new Push")
+
+      states: [
+        State
+        {
+          name: "OFFLINE"
+          when: !NetworkingStatus.online
+          PropertyChanges
+          {
+            target: empty_state
+            iconName: "sync-offline"
+            title: i18n.tr("No Push bullets")
+            subTitle: i18n.tr("Ensure you've an active connection in order to fetch your pushes")
+          }
+        }
+      ]
     }
   }
 }
