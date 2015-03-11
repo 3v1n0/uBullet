@@ -11,7 +11,8 @@ Item {
     property color hintIconColor: UbuntuColors.coolGrey
     property bool bottomEdgeEnabled: true
 
-    property real expandedPosition: 0.6 * height
+    property int expandAngle: 360
+    property real expandedPosition: (0.85 - 0.25 * expandAngle/360) * height
     property real collapsedPosition: height - hintSize/2
 
     property list<RadialAction> actions
@@ -60,10 +61,13 @@ Item {
 
         Repeater {
             id: actionList
+            readonly property real itemSpace: bottomEdge.expandAngle/actionList.count;
+            readonly property real substractAngle: (bottomEdge.expandAngle == 360 || !actionList.count) ?
+                                                    0 : (actionList.count-1)/2 * itemSpace
             model: actions
             delegate: Rectangle {
                 id: actionDelegate
-                readonly property real radAngle: (index % actionList.count * (360/actionList.count)) * Math.PI / 180
+                readonly property real radAngle: (index % actionList.count * actionList.itemSpace - actionList.substractAngle) * Math.PI / 180
                 property real distance: bottomEdgeHint.actionListDistance
                 z: -1
                 width: actionButtonSize
