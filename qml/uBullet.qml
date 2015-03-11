@@ -166,6 +166,7 @@ MainView
   }
 
   onAccountTokenChanged: {
+    push_model.clear()
     setUpPB()
   }
 
