@@ -30,14 +30,18 @@ Item {
         id: emptyLabel
         anchors.top: emptyIcon.bottom
         anchors.topMargin: units.gu(5)
-        anchors.horizontalCenter: parent.horizontalCenter
         fontSize: "large"
         font.bold: true
+        wrapMode: Text.WordWrap
+        width: parent.width
+        horizontalAlignment: Text.AlignHCenter
     }
 
     Label {
         id: emptySublabel
         anchors.top: emptyLabel.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
+        width: parent.width
+        wrapMode: Text.WordWrap
+        horizontalAlignment: Text.AlignHCenter
     }
 }
