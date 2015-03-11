@@ -253,7 +253,7 @@ MainView
           {
             iconName: "save"
             text: i18n.tr("Download")
-            visible: type && type == "file" && file_url
+            visible: model.type && type == "file" && model.file_url
             onTriggered: {
               // TODO implement proper download
               Qt.openUrlExternally(file_url)
@@ -276,7 +276,7 @@ MainView
           who: (sender_iden === pb.me.iden) ? i18n.tr("You") : (model.sender_name ? sender_name : sender_email)
           to: (sender_iden === pb.me.iden) ? (model.to ? (model.to.name ? model.to.name : model.to.email) : i18n.tr("yourself")) : i18n.tr("you")
           what: type
-          title: model.title ? model.title : (file_name ? file_name : "")
+          title: model.title ? model.title : (model.file_name ? file_name : "")
           body: model.body ? model.body : ""
           when: created
           img_src: model.image_url ? image_url : ""
