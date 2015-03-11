@@ -293,9 +293,22 @@ MainView
 
     ActivityIndicator
     {
-      running: true
-      visible: !deviceIden.length && !push_model.count
+      id: loading_indicator
       anchors.centerIn: parent
+      visible: !push_model.count && (push_model.updating || !deviceIden.length)
+      running: visible
+    }
+
+    EmptyState
+    {
+      anchors.centerIn: parent
+      width: parent.width
+      visible: !push_model.count && !loading_indicator.visible
+      iconName: NetworkingStatus.online ? "info" : "sync-offline"
+      title: NetworkingStatus.online ? i18n.tr("No Push notification") :
+                                       i18n.tr("No available connection")
+      subTitle: NetworkingStatus.online ? i18n.tr("Use the bottom edge to send a new Push") :
+                                          i18n.tr("Ensure you've an active connection in order to fetch your pushes")
     }
   }
 }
