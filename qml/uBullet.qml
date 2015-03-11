@@ -286,8 +286,12 @@ MainView
 
       PullToRefresh
       {
-        refreshing: push_model.updating
-        onRefresh: updatePushModel()
+        property bool refresh_requested: false
+        refreshing: refresh_requested && push_model.updating
+        onRefresh: {
+          refresh_requested = true
+          updatePushModel();
+        }
       }
     }
 
