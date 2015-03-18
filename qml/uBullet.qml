@@ -215,8 +215,8 @@ MainView
       return;
 
     push_model.updating = true;
-    pb.getPushes({}, function(status, reply) {
-      push_model.jsonObject = (status == 200) ? reply.pushes : null
+    pb.getPushes({}, function(reply) {
+      push_model.jsonObject = reply.ok && reply.data ? reply.data.pushes : null
       push_model.updating = false
     })
   }

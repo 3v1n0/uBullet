@@ -3,6 +3,7 @@
 var MACHINE_ID_FILE = "/etc/machine-id"
 var MACHINE_BUILD_PROPS = "/system/build.prop"
 var PB_API_PATH = "https://api.pushbullet.com/v2/"
+var INVALID_REPLY = {"ok": false, "data": null}
 
 function Pushbullet(access_token) {
   this.access_token = access_token
@@ -19,10 +20,10 @@ Pushbullet.prototype = {
   updateMe: function(cb)
   {
     var pb = this
-    this.__doGetRequest("users/me", function(status, reply) {
-      if (status == 200)
-        pb.me = reply
-      if (cb) cb()
+    this.__doGetRequest("users/me", function(reply) {
+      if (reply.ok)
+        pb.me = reply.data
+      if (cb) cb(INVALID_REPLY)
     });
   },
 
@@ -63,8 +64,8 @@ Pushbullet.prototype = {
   {
     var pb = this
     pb.deviceData(function(device_data) {
-      pb.__doPostRequest("devices", device_data, function(status, reply) {
-        pb.device = (reply && "iden" in reply) ? reply : null
+      pb.__doPostRequest("devices", device_data, function(reply) {
+        pb.device = (reply.data && "iden" in reply.data) ? reply.data : null
         if (cb) cb(reply)
       })
     })
@@ -75,14 +76,15 @@ Pushbullet.prototype = {
     if (!this.device || !this.device.iden)
     {
       console.error("Impossible to update a device with no iden")
-      if (cb) cb()
+      if (cb) cb(INVALID_REPLY)
       return;
     }
 
     var pb = this
     pb.deviceData(function(device_data) {
-      pb.__doPostRequest("devices/"+pb.device.iden, device_data, function(status, reply) {
-        pb.device = (reply && "iden" in reply) ? reply : null
+      pb.__doPostRequest("devices/"+pb.device.iden, device_data, function(reply) {
+        pb.device = (reply.data && "iden" in reply.data) ? reply.data : null
+        console.log(Debug.serialize(pb.device))
         if (cb) cb(pb.device)
       })
     })
@@ -97,9 +99,9 @@ Pushbullet.prototype = {
     }
 
     var pb = this
-    pb.__doGetRequest("devices", function(status, reply) {
-      if (status == 200 && reply.devices)
-        pb.devices = reply.devices
+    pb.__doGetRequest("devices", function(reply) {
+      if (reply.ok && reply.data.devices)
+        pb.devices = reply.data.devices
 
       if (cb) cb(pb.devices !== null ? pb.devices : [])
     })
@@ -209,14 +211,16 @@ Pushbullet.prototype = {
     xhr.onreadystatechange = function() {
       if (xhr.readyState === XMLHttpRequest.DONE && cb)
       {
-        var reply = xhr.responseText ? JSON.parse(xhr.responseText) : null
-        if (xhr.status != 200)
+        var reply = {"ok": xhr.status === 200, "status": xhr.status,
+                     "data": xhr.responseText ? JSON.parse(xhr.responseText) : null }
+
+        if (!reply.ok)
         {
-          var error_string = (reply && "error" in reply) ? reply.error.type+": "+reply.error.message : ""
+          reply.error = (reply.data && "error" in reply.data) ? reply.data.error : null
+          var error_string = (reply.error) ? reply.error.type+": "+reply.error.message : ""
           console.error("Got error "+xhr.status+(error_string.length ? "; "+error_string : ""));
         }
-
-        cb(xhr.status, reply)
+        cb(reply)
       }
     };
     xhr.send(parameters ? JSON.stringify(parameters) : null)
