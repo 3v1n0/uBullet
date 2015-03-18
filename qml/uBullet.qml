@@ -21,6 +21,7 @@ MainView
   applicationName: "xyz.trevisan.marco.ubullet"
   automaticOrientation: true
   useDeprecatedToolbar: false
+  anchorToKeyboard: true
 
   width: units.gu(40)
   height: units.gu(71)
