@@ -15,6 +15,7 @@ Item
   anchors.horizontalCenter: parent.horizontalCenter
   anchors.verticalCenterOffset: parent.height/4
   width: parent.width * 0.6
+  z: Number.POSITIVE_INFINITY
 
   function show(text)
   {
