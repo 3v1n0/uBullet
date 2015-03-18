@@ -9,7 +9,7 @@ Item
   property int standDuration: 1000
   property color bgColor: UbuntuColors.coolGrey
   property real bgOpacity: 0.8
-  property ListModel queue: ListModel{}
+  property var queue: []
 
   anchors.verticalCenter: parent.verticalCenter
   anchors.horizontalCenter: parent.horizontalCenter
@@ -27,7 +27,7 @@ Item
       }
       else
       {
-        queue.append({"text": text})
+        queue.push(text)
       }
     }
   }
@@ -76,17 +76,12 @@ Item
     {
       interval: notification.standDuration
       running: bubble.opacity == 1.0
-      repeat: notification.queue.count > 0 || running
+      repeat: notification.queue.length > 0 && running
       onTriggered: {
-        if (notification.queue.count)
-        {
-          label.text = notification.queue.get(0).text
-          notification.queue.remove(0)
-        }
+        if (notification.queue.length)
+          label.text = notification.queue.shift()
         else
-        {
           bubble.state = ""
-        }
       }
     }
   }
