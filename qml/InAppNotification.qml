@@ -80,7 +80,7 @@ Item
     {
       interval: notification.standDuration
       running: bubble.opacity == 1.0
-      repeat: notification.queue.length > 0 && running
+      repeat: running
       onTriggered: {
         if (notification.queue.length)
           label.text = notification.queue.shift()
