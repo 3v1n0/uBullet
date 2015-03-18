@@ -9,6 +9,7 @@ Item
   property int standDuration: 1000
   property color bgColor: UbuntuColors.coolGrey
   property real bgOpacity: 0.8
+  property ListModel queue: ListModel{}
 
   anchors.verticalCenter: parent.verticalCenter
   anchors.horizontalCenter: parent.horizontalCenter
@@ -17,22 +18,32 @@ Item
 
   function show(text)
   {
-    notification_label.text = typeof(text) == "string" ? text : ""
-    notification_bubble.state = notification_label.text.length ? "visible" : ""
+    if (typeof(text) == "string" && text.length)
+    {
+      if (bubble.state == "")
+      {
+        bubble.state = "visible"
+        label.text = text;
+      }
+      else
+      {
+        queue.append({"text": text})
+      }
+    }
   }
 
   UbuntuShape
   {
-    id: notification_bubble
+    id: bubble
     opacity: 0
     visible: opacity != 0
     color: Qt.rgba(notification.bgColor.r, notification.bgColor.g, notification.bgColor.b, notification.bgOpacity)
     width: parent.width
-    height: notification_label.height * 1.75
+    height: label.height * 1.75
 
     Label
     {
-      id: notification_label
+      id: label
       fontSize: "small"
       color: "white"
       width: parent.width * 0.95
@@ -46,7 +57,7 @@ Item
         name: "visible"
 
         PropertyChanges {
-          target: notification_bubble
+          target: bubble
           opacity: 1.0
         }
       }
@@ -64,8 +75,19 @@ Item
     Timer
     {
       interval: notification.standDuration
-      running: notification_bubble.opacity == 1.0
-      onTriggered: notification_bubble.state = ""
+      running: bubble.opacity == 1.0
+      repeat: notification.queue.count > 0 || running
+      onTriggered: {
+        if (notification.queue.count)
+        {
+          label.text = notification.queue.get(0).text
+          notification.queue.remove(0)
+        }
+        else
+        {
+          bubble.state = ""
+        }
+      }
     }
   }
 }
