@@ -57,10 +57,12 @@ Item
     }
 
     states: [
-      State {
+      State
+      {
         name: "visible"
 
-        PropertyChanges {
+        PropertyChanges
+        {
           target: bubble
           opacity: 1.0
         }
@@ -68,8 +70,10 @@ Item
     ]
 
     transitions: [
-      Transition {
-        UbuntuNumberAnimation {
+      Transition
+      {
+        UbuntuNumberAnimation
+        {
           properties: "opacity"
           duration: notification.animationDuration
         }
