@@ -222,113 +222,122 @@ MainView
     })
   }
 
-  Page
+
+  PageStack
   {
-    id: main_page
-    title: i18n.tr("uBullet")
+    id: page_stack
 
-    ListView
+    Page
     {
-      anchors.fill: parent
-      model: JSONListModel { id: push_model }
+      id: main_page
+      title: i18n.tr("uBullet")
+      visible: false
 
-      delegate: ListItemWithActions {
-        width: parent.width
-        height: bubble.height + units.gu(2)
+      ListView
+      {
+        anchors.fill: parent
+        model: JSONListModel { id: push_model }
 
-        leftSideAction: Action {
-          iconName: "delete"
-          text: i18n.tr("Remove")
-          onTriggered: {
-            bubble.aboutToRemove = true
-            pb.deletePush(iden, function(status) {
-              if (status == 200)
-                push_model.remove(index)
+        delegate: ListItemWithActions {
+          width: parent.width
+          height: bubble.height + units.gu(2)
 
-              bubble.aboutToRemove = false
-            })
+          leftSideAction: Action {
+            iconName: "delete"
+            text: i18n.tr("Remove")
+            onTriggered: {
+              bubble.aboutToRemove = true
+              pb.deletePush(iden, function(status) {
+                if (status == 200)
+                  push_model.remove(index)
+
+                bubble.aboutToRemove = false
+              })
+            }
+          }
+
+          rightSideActions: [
+            Action
+            {
+              iconName: "save"
+              text: i18n.tr("Download")
+              visible: model.type && type == "file" && model.file_url
+              onTriggered: {
+                // TODO implement proper download
+                Qt.openUrlExternally(file_url)
+              }
+            },
+            Action
+            {
+              iconName: "share"
+              text: i18n.tr("Share")
+              visible: typeof(url) != "undefined" || typeof(file_url) != "undefined"
+              onTriggered: {
+                share_popup.shareLink(url || file_url, title)
+              }
+            }
+          ]
+
+          PushBubble
+          {
+            id: bubble
+            who: (sender_iden === pb.me.iden) ? i18n.tr("You") : (model.sender_name ? sender_name : sender_email)
+            to: (sender_iden === pb.me.iden) ? (model.to ? (model.to.name ? model.to.name : model.to.email) : i18n.tr("yourself")) : i18n.tr("you")
+            what: type
+            title: model.title ? model.title : (model.file_name ? file_name : "")
+            body: model.body ? model.body : ""
+            when: created
+            img_src: model.image_url ? image_url : ""
+            link: model.url ? url : ""
           }
         }
 
-        rightSideActions: [
-          Action
+        PullToRefresh
+        {
+          property bool refresh_requested: false
+          refreshing: refresh_requested && push_model.updating
+          onRefresh: {
+            refresh_requested = true
+            updatePushModel();
+          }
+        }
+      }
+
+      ActivityIndicator
+      {
+        id: loading_indicator
+        anchors.centerIn: parent
+        visible: !push_model.count && (push_model.updating || (!deviceIden.length && NetworkingStatus.online))
+        running: visible
+      }
+
+      EmptyState
+      {
+        id: empty_state
+        anchors.centerIn: parent
+        width: parent.width
+        visible: !push_model.count && !loading_indicator.visible
+        iconName: "info"
+        title: i18n.tr("No Push bullets")
+        subTitle: i18n.tr("Use the bottom edge to send a new Push")
+
+        states: [
+          State
           {
-            iconName: "save"
-            text: i18n.tr("Download")
-            visible: model.type && type == "file" && model.file_url
-            onTriggered: {
-              // TODO implement proper download
-              Qt.openUrlExternally(file_url)
-            }
-          },
-          Action
-          {
-            iconName: "share"
-            text: i18n.tr("Share")
-            visible: typeof(url) != "undefined" || typeof(file_url) != "undefined"
-            onTriggered: {
-              share_popup.shareLink(url || file_url, title)
+            name: "OFFLINE"
+            when: !NetworkingStatus.online
+            PropertyChanges
+            {
+              target: empty_state
+              iconName: "sync-offline"
+              title: i18n.tr("No Push bullets")
+              subTitle: i18n.tr("Ensure you've an active connection in order to fetch your pushes")
             }
           }
         ]
-
-        PushBubble
-        {
-          id: bubble
-          who: (sender_iden === pb.me.iden) ? i18n.tr("You") : (model.sender_name ? sender_name : sender_email)
-          to: (sender_iden === pb.me.iden) ? (model.to ? (model.to.name ? model.to.name : model.to.email) : i18n.tr("yourself")) : i18n.tr("you")
-          what: type
-          title: model.title ? model.title : (model.file_name ? file_name : "")
-          body: model.body ? model.body : ""
-          when: created
-          img_src: model.image_url ? image_url : ""
-          link: model.url ? url : ""
-        }
       }
 
-      PullToRefresh
-      {
-        property bool refresh_requested: false
-        refreshing: refresh_requested && push_model.updating
-        onRefresh: {
-          refresh_requested = true
-          updatePushModel();
-        }
-      }
-    }
-
-    ActivityIndicator
-    {
-      id: loading_indicator
-      anchors.centerIn: parent
-      visible: !push_model.count && (push_model.updating || (!deviceIden.length && NetworkingStatus.online))
-      running: visible
-    }
-
-    EmptyState
-    {
-      id: empty_state
-      anchors.centerIn: parent
-      width: parent.width
-      visible: !push_model.count && !loading_indicator.visible
-      iconName: "info"
-      title: i18n.tr("No Push bullets")
-      subTitle: i18n.tr("Use the bottom edge to send a new Push")
-
-      states: [
-        State
-        {
-          name: "OFFLINE"
-          when: !NetworkingStatus.online
-          PropertyChanges
-          {
-            target: empty_state
-            iconName: "sync-offline"
-            title: i18n.tr("No Push bullets")
-            subTitle: i18n.tr("Ensure you've an active connection in order to fetch your pushes")
-          }
-        }
-      ]
+      Component.onCompleted: page_stack.push(main_page)
     }
   }
 }
