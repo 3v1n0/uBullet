@@ -6,15 +6,17 @@ Item
   id: notification
 
   property int animationDuration: UbuntuAnimation.SleepyDuration
-  property int standDuration: 1000
+  property int standDuration: 1500
   property color bgColor: UbuntuColors.coolGrey
   property real bgOpacity: 0.8
+  property alias fontSize: label.fontSize
+  property alias fontWeight: label.font.weight
   property var queue: []
 
   anchors.verticalCenter: parent.verticalCenter
   anchors.horizontalCenter: parent.horizontalCenter
   anchors.verticalCenterOffset: parent.height/4
-  width: parent.width * 0.6
+  width: parent.width * 0.75
   z: Number.POSITIVE_INFINITY
 
   function show(text)
@@ -40,12 +42,13 @@ Item
     visible: opacity != 0
     color: Qt.rgba(notification.bgColor.r, notification.bgColor.g, notification.bgColor.b, notification.bgOpacity)
     width: parent.width
-    height: label.height * 1.75
+    height: label.height * 2.25
 
     Label
     {
       id: label
       fontSize: "small"
+      font.weight: Font.Bold
       color: "white"
       width: parent.width * 0.95
       anchors.centerIn: parent
