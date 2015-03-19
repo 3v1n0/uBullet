@@ -105,8 +105,7 @@ Page
                   enabled: email_field.acceptableInput
                   color: UbuntuColors.orange
                   onClicked: {
-                    device_selector.getSelectedDevice().email = email_field.text
-                    device_selector.model.sync()
+                    device_selector.model.setProperty(device_selector.selectedIndex, "email", email_field.text)
                     PopupUtils.close(dialog)
                   }
                 }
