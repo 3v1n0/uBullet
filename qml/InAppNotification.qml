@@ -23,9 +23,9 @@ Item
   {
     if (typeof(text) == "string" && text.length)
     {
-      if (bubble.state == "")
+      if (!bubble.showing)
       {
-        bubble.state = "visible"
+        bubble.showing = true
         label.text = text;
       }
       else
@@ -38,7 +38,8 @@ Item
   UbuntuShape
   {
     id: bubble
-    opacity: 0
+    property bool showing: false
+    opacity: showing ? 1 : 0
     visible: opacity != 0
     color: Qt.rgba(notification.bgColor.r, notification.bgColor.g, notification.bgColor.b, notification.bgOpacity)
     width: parent.width
@@ -56,40 +57,21 @@ Item
       horizontalAlignment: Text.AlignHCenter
     }
 
-    states: [
-      State
-      {
-        name: "visible"
-
-        PropertyChanges
-        {
-          target: bubble
-          opacity: 1.0
-        }
-      }
-    ]
-
-    transitions: [
-      Transition
-      {
-        UbuntuNumberAnimation
-        {
-          properties: "opacity"
-          duration: notification.animationDuration
-        }
-      }
-    ]
+    Behavior on opacity
+    {
+      UbuntuNumberAnimation { duration: UbuntuAnimation.SleepyDuration }
+    }
 
     Timer
     {
       interval: notification.standDuration
-      running: bubble.opacity == 1.0
+      running: bubble.showing
       repeat: running
       onTriggered: {
         if (notification.queue.length)
           label.text = notification.queue.shift()
         else
-          bubble.state = ""
+          bubble.showing = false
       }
     }
   }
