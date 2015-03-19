@@ -178,11 +178,6 @@ MainView
     updatePushModel()
   }
 
-  SharePopup
-  {
-    id: share_popup
-  }
-
   function setUpPB()
   {
     if (NetworkingStatus.online)
@@ -223,6 +218,8 @@ MainView
     })
   }
 
+  SharePopup { id: share_popup }
+  InAppNotification { id: notification }
 
   PageStack
   {
