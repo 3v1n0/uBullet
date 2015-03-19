@@ -1,6 +1,7 @@
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
 import Ubuntu.Components 1.1
+import Ubuntu.Components.Popups 1.0
 import Ubuntu.Connectivity 1.0
 import "."
 
@@ -43,19 +44,77 @@ Page
         {
           readonly property var broadcastDevice: { "active": true, "pushable": true, "iden": "",
                                                    "nickname": i18n.tr("All my devices") }
-          id: desination_selector
+          readonly property var customDevice: { "active": true, "pushable": true, "iden": "", "email": "",
+                                                "nickname": i18n.tr("Custom device (email address)") }
+
+          id: device_selector
           expanded: false
           model: JSONListModel {}
-          delegate: OptionSelectorDelegate { text: nickname; subText: model ? model : "" }
           Layout.fillWidth: true
           containerHeight: Math.min(model.count, 4) * itemHeight + (model.count > 4 ? itemHeight * 0.75 : 0)
+          delegate: OptionSelectorDelegate {
+            text: nickname
+            subText: model ? model : (email ? email : "")
+            onPressedChanged: {
+              if (pressed && typeof(email) == "string" &&
+                  device_selector.currentlyExpanded &&
+                  (device_selector.selectedIndex == index || !email.length))
+              {
+                PopupUtils.open(customEmailDialog)
+              }
+            }
+          }
 
           Component.onCompleted: {
             model.jsonObject = [broadcastDevice]
             main.pb.getDevices(function(devices) {
               devices.unshift(broadcastDevice)
+              devices.push(customDevice)
               model.jsonObject = devices
             })
+          }
+
+          Component
+          {
+            id: customEmailDialog
+            Dialog
+            {
+              id: dialog
+              title: i18n.tr("Custom device")
+              text: i18n.tr("Add an email address to send this push to (if not a Pushbullet user will get an email)")
+
+              TextField
+              {
+                id: email_field
+                text: device_selector.model.get(device_selector.selectedIndex).email
+                inputMethodHints: Qt.ImhEmailCharactersOnly
+                validator: RegExpValidator { regExp:/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/ }
+              }
+
+              RowLayout
+              {
+                Button
+                {
+                  Layout.alignment: Qt.AlignHCenter
+                  text: i18n.tr("Ok")
+                  enabled: email_field.acceptableInput
+                  color: UbuntuColors.orange
+                  onClicked: {
+                    var index = device_selector.selectedIndex
+                    device_selector.model.get(index).email = email_field.text
+                    device_selector.model.sync()
+                    PopupUtils.close(dialog)
+                  }
+                }
+
+                Button
+                {
+                  Layout.alignment: Qt.AlignHCenter
+                  text: i18n.tr("Cancel")
+                  onClicked: PopupUtils.close(dialog)
+                }
+              }
+            }
           }
         }
       }
