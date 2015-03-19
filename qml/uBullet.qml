@@ -227,6 +227,11 @@ MainView
   {
     id: page_stack
 
+    function showSendPushPage(type)
+    {
+      push(Qt.resolvedUrl("SendPushPage.qml"), {type: type})
+    }
+
     Page
     {
       id: main_page
@@ -333,6 +338,41 @@ MainView
               title: i18n.tr("No Push bullets")
               subTitle: i18n.tr("Ensure you've an active connection in order to fetch your pushes")
             }
+          }
+        ]
+      }
+
+      RadialBottomEdge
+      {
+        expandAngle: 180
+        hintIconName: "add"
+        actions: [
+          RadialAction
+          {
+            iconName: "stock_image"
+            iconColor: UbuntuColors.coolGrey
+            onTriggered: page_stack.showSendPushPage("image")
+          },
+
+          RadialAction
+          {
+            iconName: "note"
+            iconColor: UbuntuColors.coolGrey
+            onTriggered: page_stack.showSendPushPage("note")
+          },
+
+          RadialAction
+          {
+            iconName: "external-link"
+            iconColor: UbuntuColors.coolGrey
+            onTriggered: page_stack.showSendPushPage("link")
+          },
+
+          RadialAction
+          {
+            iconName: "attachment"
+            iconColor: UbuntuColors.coolGrey
+            onTriggered: page_stack.showSendPushPage("file")
           }
         ]
       }
