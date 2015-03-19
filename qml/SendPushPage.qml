@@ -215,6 +215,30 @@ Page
     text: i18n.tr("Send")
     color: Constants.pushbulletGreen
 
-    onClicked: {}
+    onClicked: {
+      sending = true
+      var push = {"type": send_push_page.type, "title": title.text, "body": message.text}
+
+      if (push.type == Constants.typeLink)
+        push.url = link.text
+
+      main.pb.sendPush(push, function(reply) {
+        sending = false
+
+        if (reply.ok)
+        {
+          notification.show(i18n.tr("Push sent correctly!"))
+          page_stack.pop()
+        }
+        else
+        {
+          var message = i18n.tr("Got an error while sending push");
+          if (reply.error)
+            i18n.tr("Got an error while sending push: %1".arg(reply.error.message));
+
+          notification.show(message)
+        }
+      })
+    }
   }
 }
