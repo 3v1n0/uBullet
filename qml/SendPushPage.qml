@@ -188,16 +188,13 @@ Page
   {
     id: loading_overlay
     visible: send_button.sending
+    opacity: visible ? 1 : 0
     anchors.fill: flickable_form
     color: Qt.rgba(UbuntuColors.coolGrey.r, UbuntuColors.coolGrey.g, UbuntuColors.coolGrey.b, 0.4)
 
-    UbuntuNumberAnimation
+    Behavior on opacity
     {
-      running: loading_overlay.visible
-      target: loading_overlay
-      properties: "opacity"
-      from: 0; to: 1;
-      duration: UbuntuAnimation.BriskDuration
+      UbuntuNumberAnimation { duration: UbuntuAnimation.BriskDuration }
     }
 
     ActivityIndicator
