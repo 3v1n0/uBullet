@@ -41,6 +41,8 @@ Page
 
         OptionSelector
         {
+          readonly property var broadcastDevice: { "active": true, "pushable": true, "iden": "",
+                                                   "nickname": i18n.tr("All my devices") }
           id: desination_selector
           expanded: false
           model: JSONListModel {}
@@ -49,7 +51,9 @@ Page
           containerHeight: Math.min(model.count, 4) * itemHeight + (model.count > 4 ? itemHeight * 0.75 : 0)
 
           Component.onCompleted: {
+            model.jsonObject = [broadcastDevice]
             main.pb.getDevices(function(devices) {
+              devices.unshift(broadcastDevice)
               model.jsonObject = devices
             })
           }
