@@ -68,9 +68,9 @@ Page
           Component.onCompleted: {
             model.jsonObject = [broadcastDevice]
             main.pb.getDevices(function(devices) {
-              devices.unshift(broadcastDevice)
-              devices.push(customDevice)
-              model.jsonObject = devices
+              model.jsonObject.push.apply(model.jsonObject, devices)
+              model.jsonObject.push(customDevice)
+              model.updateJSONModel()
             })
           }
 
