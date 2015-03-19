@@ -186,10 +186,19 @@ Page
 
   Rectangle
   {
-    id: flickable_loading_overlay
+    id: loading_overlay
     visible: send_button.sending
     anchors.fill: flickable_form
     color: Qt.rgba(UbuntuColors.coolGrey.r, UbuntuColors.coolGrey.g, UbuntuColors.coolGrey.b, 0.4)
+
+    UbuntuNumberAnimation
+    {
+      running: loading_overlay.visible
+      target: loading_overlay
+      properties: "opacity"
+      from: 0; to: 1;
+      duration: UbuntuAnimation.BriskDuration
+    }
 
     ActivityIndicator
     {
