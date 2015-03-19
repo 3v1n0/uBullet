@@ -42,6 +42,7 @@ Page
 
         OptionSelector
         {
+          property bool valid: true
           readonly property var broadcastDevice: { "active": true, "pushable": true, "iden": "",
                                                    "nickname": i18n.tr("All my devices") }
           readonly property var customDevice: { "active": true, "pushable": true, "iden": "", "email": "",
@@ -60,9 +61,14 @@ Page
                   device_selector.currentlyExpanded &&
                   (device_selector.selectedIndex == index || !email.length))
               {
-                PopupUtils.open(customEmailDialog)
+                PopupUtils.open(custom_email_dialog)
               }
             }
+          }
+
+          onSelectedIndexChanged: {
+            var device = getSelectedDevice();
+            valid = !getSelectedDevice().email || getSelectedDevice().email.length > 0
           }
 
           Component.onCompleted: {
@@ -81,7 +87,7 @@ Page
 
           Component
           {
-            id: customEmailDialog
+            id: custom_email_dialog
             Dialog
             {
               id: dialog
@@ -106,6 +112,7 @@ Page
                   color: UbuntuColors.orange
                   onClicked: {
                     device_selector.model.setProperty(device_selector.selectedIndex, "email", email_field.text)
+                    device_selector.valid = true
                     PopupUtils.close(dialog)
                   }
                 }
@@ -114,7 +121,10 @@ Page
                 {
                   Layout.alignment: Qt.AlignHCenter
                   text: i18n.tr("Cancel")
-                  onClicked: PopupUtils.close(dialog)
+                  onClicked: {
+                    device_selector.valid = device_selector.getSelectedDevice().email.length > 0
+                    PopupUtils.close(dialog)
+                  }
                 }
               }
             }
@@ -179,7 +189,7 @@ Page
     anchors.bottom: parent.bottom
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.margins: Constants.defaultMargins
-    enabled: NetworkingStatus.online && !sending
+    enabled: NetworkingStatus.online && device_selector.valid && !sending
     text: i18n.tr("Send")
     color: Constants.pushbulletGreen
 
