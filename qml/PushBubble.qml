@@ -15,10 +15,11 @@ UbuntuShape
   property string img_src
   property string link
   property var when
-  readonly property double content_spacing: units.gu(0.9)
+
+  readonly property double contentSpacing: units.gu(0.9)
 
   width: parent.width
-  height: content_layout.height + content_spacing * 2
+  height: content_layout.height + contentSpacing * 2
   color: "white"
   opacity: aboutToRemove ? 0.4 : 1.0
 
@@ -33,13 +34,13 @@ UbuntuShape
 
   function translatedWhat()
   {
-    if (what == "note")
+    if (what == Constants.typeNote)
       return i18n.tr("note")
-    else if (what == "link")
+    else if (what == Constants.typeLink)
       return i18n.tr("link")
-    else if (what == "file")
+    else if (what == Constants.typeFile)
       return i18n.tr("file")
-    else if (what == "list")
+    else if (what == Constants.typeList)
       return i18n.tr("list")
 
     return what
@@ -60,9 +61,9 @@ UbuntuShape
   ColumnLayout
   {
     id: content_layout
-    x: content_spacing
-    y: content_spacing
-    width: parent.width - content_spacing * 2
+    x: contentSpacing
+    y: contentSpacing
+    width: parent.width - contentSpacing * 2
     Layout.alignment: Qt.AlignTop | Qt.AlignLeft
 
     RowLayout
