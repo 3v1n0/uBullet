@@ -145,6 +145,11 @@ Pushbullet.prototype = {
     this.__doGetRequest("pushes?modified_after=%1&active=%2".arg(since).arg(active ? "true" : "false"), cb);
   },
 
+  sendPush: function(params, cb)
+  {
+    this.__doPostRequest("pushes", params, cb)
+  },
+
   deletePush: function(iden, cb)
   {
     this.__doDeleteRequest("pushes/"+iden, cb);
