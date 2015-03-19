@@ -13,7 +13,9 @@ Page
 
   Flickable
   {
+    id: flickable_form
     clip: true
+    enabled: !send_button.sending
     contentHeight: main_column.height
     anchors.top: parent.top
     anchors.left: parent.left
@@ -179,6 +181,20 @@ Page
         placeholderText: i18n.tr("Message")
         Layout.fillWidth: true
       }
+    }
+  }
+
+  Rectangle
+  {
+    id: flickable_loading_overlay
+    visible: send_button.sending
+    anchors.fill: flickable_form
+    color: Qt.rgba(UbuntuColors.coolGrey.r, UbuntuColors.coolGrey.g, UbuntuColors.coolGrey.b, 0.4)
+
+    ActivityIndicator
+    {
+      anchors.centerIn: parent
+      running: parent.visible
     }
   }
 
