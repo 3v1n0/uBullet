@@ -2,6 +2,7 @@ import QtQuick 2.1
 import QtQuick.Layouts 1.1
 import Ubuntu.Components 1.1
 import Ubuntu.Connectivity 1.0
+import "."
 
 Page
 {
@@ -17,12 +18,12 @@ Page
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: send_button.top
-    anchors.bottomMargin: units.gu(1.5)
+    anchors.bottomMargin: Constants.defaultMargins
 
     ColumnLayout
     {
       id: main_column
-      anchors.margins: units.gu(1.5)
+      anchors.margins: Constants.defaultMargins
       anchors.top: parent.top
       anchors.left: parent.left
       anchors.right: parent.right
@@ -105,10 +106,10 @@ Page
     property bool sending: false
     anchors.bottom: parent.bottom
     anchors.horizontalCenter: parent.horizontalCenter
-    anchors.margins: units.gu(1.5)
+    anchors.margins: Constants.defaultMargins
     enabled: NetworkingStatus.online && !sending
     text: i18n.tr("Send")
-    color: "#6EC07C"
+    color: Constants.pushbulletGreen
 
     onClicked: {}
   }

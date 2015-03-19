@@ -1,6 +1,7 @@
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
 import Ubuntu.Components 1.1
+import "."
 
 UbuntuShape
 {
@@ -101,7 +102,7 @@ UbuntuShape
         wrapMode: Text.Wrap
         elide: Text.ElideRight
         Layout.maximumWidth: content_layout.width
-        color: bg_image.ready ? "white" : "#34495E"
+        color: bg_image.ready ? "white" : Constants.pushbulletBlue
       }
 
       Label
@@ -123,7 +124,7 @@ UbuntuShape
         elide: Text.ElideRight
         maximumLineCount: 1
         Layout.maximumWidth: content_layout.width
-        linkColor: "#6EC07C"
+        linkColor: Constants.pushbulletGreen
         onLinkActivated: Qt.openUrlExternally(link)
       }
     }
