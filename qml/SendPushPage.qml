@@ -74,6 +74,11 @@ Page
             })
           }
 
+          function getSelectedDevice()
+          {
+            return model.get(selectedIndex)
+          }
+
           Component
           {
             id: customEmailDialog
@@ -86,7 +91,7 @@ Page
               TextField
               {
                 id: email_field
-                text: device_selector.model.get(device_selector.selectedIndex).email
+                text: device_selector.getSelectedDevice().email
                 inputMethodHints: Qt.ImhEmailCharactersOnly
                 validator: RegExpValidator { regExp:/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/ }
               }
@@ -100,8 +105,7 @@ Page
                   enabled: email_field.acceptableInput
                   color: UbuntuColors.orange
                   onClicked: {
-                    var index = device_selector.selectedIndex
-                    device_selector.model.get(index).email = email_field.text
+                    device_selector.getSelectedDevice().email = email_field.text
                     device_selector.model.sync()
                     PopupUtils.close(dialog)
                   }
