@@ -247,8 +247,8 @@ MainView
             text: i18n.tr("Remove")
             onTriggered: {
               bubble.aboutToRemove = true
-              pb.deletePush(iden, function(status) {
-                if (status == 200)
+              pb.deletePush(iden, function(reply) {
+                if (reply.ok)
                   push_model.remove(index)
 
                 bubble.aboutToRemove = false
