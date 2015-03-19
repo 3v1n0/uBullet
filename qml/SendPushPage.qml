@@ -43,10 +43,16 @@ Page
         {
           id: desination_selector
           expanded: false
-          model: 4
-          delegate: OptionSelectorDelegate { text: "faa"+index }
-          onSelectedIndexChanged: {}
+          model: JSONListModel {}
+          delegate: OptionSelectorDelegate { text: nickname; subText: model ? model : "" }
           Layout.fillWidth: true
+          containerHeight: Math.min(model.count, 4) * itemHeight + (model.count > 4 ? itemHeight * 0.75 : 0)
+
+          Component.onCompleted: {
+            main.pb.getDevices(function(devices) {
+              model.jsonObject = devices
+            })
+          }
         }
       }
 
