@@ -7,7 +7,7 @@ import "."
 Page
 {
   id: send_push_page
-  property string type: "note"
+  property string type: Constants.typeNote
   title: i18n.tr("New Push")
 
   Flickable
@@ -60,14 +60,14 @@ Page
       TextField
       {
         id: link
-        visible: send_push_page.type == "link"
+        visible: send_push_page.type == Constants.typeLink
         placeholderText: i18n.tr("Link")
         Layout.fillWidth: true
       }
 
       RowLayout
       {
-        visible: send_push_page.type == "file"
+        visible: send_push_page.type == Constants.typeFile
         Label
         {
           text: i18n.tr("File")
@@ -82,7 +82,7 @@ Page
 
       UbuntuShape
       {
-        visible: send_push_page.type == "image"
+        visible: send_push_page.type == Constants.typeImage
         image: Image {
           id: push_image
           anchors.fill: parent

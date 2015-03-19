@@ -8,4 +8,10 @@ QtObject
 
   readonly property color pushbulletGreen: "#6EC07C"
   readonly property color pushbulletBlue: "#34495E"
+
+  readonly property string typeNote: "note"
+  readonly property string typeLink: "link"
+  readonly property string typeFile: "file"
+  readonly property string typeList: "list"
+  readonly property string typeImage: "image"
 }

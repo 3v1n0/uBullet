@@ -8,6 +8,7 @@ import Ubuntu.PushNotifications 0.1
 import U1db 1.0 as U1db
 import "Pushbullet.js" as PB
 import "3rd-party"
+import "."
 
 MainView
 {
@@ -351,28 +352,28 @@ MainView
           {
             iconName: "stock_image"
             iconColor: UbuntuColors.coolGrey
-            onTriggered: page_stack.showSendPushPage("image")
+            onTriggered: page_stack.showSendPushPage(Constants.typeImage)
           },
 
           RadialAction
           {
             iconName: "note"
             iconColor: UbuntuColors.coolGrey
-            onTriggered: page_stack.showSendPushPage("note")
+            onTriggered: page_stack.showSendPushPage(Constants.typeNote)
           },
 
           RadialAction
           {
             iconName: "external-link"
             iconColor: UbuntuColors.coolGrey
-            onTriggered: page_stack.showSendPushPage("link")
+            onTriggered: page_stack.showSendPushPage(Constants.typeLink)
           },
 
           RadialAction
           {
             iconName: "attachment"
             iconColor: UbuntuColors.coolGrey
-            onTriggered: page_stack.showSendPushPage("file")
+            onTriggered: page_stack.showSendPushPage(Constants.typeFile)
           }
         ]
       }
